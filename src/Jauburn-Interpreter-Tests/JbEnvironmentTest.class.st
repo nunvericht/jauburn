@@ -44,15 +44,15 @@ JbEnvironmentTest >> testLookupInFails [
 
 { #category : #tests }
 JbEnvironmentTest >> testSetAtRightLevel [
-	
+
 	outer at: #dad put: 'donald'.
 	inner at: #son put: 'riri'.
-	self assert: (inner at: #son) = 'riri'.
+	self assert: (inner at: #son) equals: 'riri'.
 	inner lookupAt: #son put: 'fifi'.
-	
-	self assert: (outer at: #dad) = 'donald'.
+
+	self assert: (outer at: #dad) equals: 'donald'.
 	outer lookupAt: #dad put: 'piscou'.
-	self assert: (outer at: #dad) = 'piscou'.
+	self assert: (outer at: #dad) equals:'piscou'
 ]
 
 { #category : #tests }
@@ -60,9 +60,9 @@ JbEnvironmentTest >> testSetLookup [
 
 	outer at: #dad put: 'donald'.
 	inner at: #son put: 'riri'.
-	self assert: (inner at: #dad) = 'donald'.
+	self assert: (inner at: #dad) equals: 'donald'.
 	inner lookupAt: #dad put: 'picsou'.
-	self assert: (outer at: #dad) = 'picsou'.
-	self assert: (inner at: #dad) = 'picsou'.
+	self assert: (outer at: #dad) equals: 'picsou'.
+	self assert: (inner at: #dad) equals: 'picsou'.
 	self deny: (inner includesKey: #dad)
 ]

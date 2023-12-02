@@ -5,7 +5,8 @@ JbPrintStatementNode >> executeIn: anEnvironment [
 
 	| value |
 	value := expression evaluateIn: anEnvironment.
-	Transcript
+	
+	anEnvironment jbTranscript
 		show: value;
 		cr
 ]

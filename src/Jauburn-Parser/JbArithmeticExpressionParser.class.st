@@ -24,16 +24,19 @@ JbArithmeticExpressionParser class >> dependencies [
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> arithmeticExpression [
 
-	^ arithmeticTerm , ('+' asParser trim , arithmeticTerm) star
-	  ==> [ :arr | 
-		  | current |
-		  current := arr first.
-		  arr second do: [ :pair | 
-			  current := JbAdditionNode new
-				             lhs: current;
-				             rhs: pair second;
-				             yourself ].
-		  current ]
+	^ ((arithmeticTerm separatedBy: ('+' asParser / '-' asParser) trim) 
+		   foldLeft: [ :a :op :b | 
+			   op = '+'
+				   ifTrue: [ 
+					   JbAdditionNode new
+						   lhs: a;
+						   rhs: b;
+						   yourself ]
+				   ifFalse: [ 
+					   JbSubtractionNode new
+						   lhs: a;
+						   rhs: b;
+						   yourself ] ]) / arithmeticTerm
 ]
 
 { #category : #'non-terminals' }
@@ -47,15 +50,29 @@ JbArithmeticExpressionParser >> arithmeticFactor [
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> arithmeticTerm [
 
-	^ arithmeticFactor , ($* asParser trim , arithmeticFactor) star
-	  ==> [ :arr | |current|
-		current := arr first.
-		arr second do: [ :pair |
-		  current := JbMultiplicationNode new
-			  lhs: current;
-			  rhs: pair second
-			  yourself].
-		current ]
+	^ ((arithmeticFactor separatedBy:
+		    ('*' asParser / '/' asParser / '%' asParser) trim) foldLeft: [ 
+		   :a 
+		   :op 
+		   :b | 
+		   op = '*'
+			   ifTrue: [ 
+				   JbMultiplicationNode new
+					   lhs: a;
+					   rhs: b;
+					   yourself ]
+			   ifFalse: [ 
+				   op = '/'
+					   ifTrue: [ 
+						   JbDivisionNode new
+							   lhs: a;
+							   rhs: b;
+							   yourself ]
+					   ifFalse: [ 
+						   JbModuloNode new
+							   lhs: a;
+							   rhs: b;
+							   yourself ] ] ]) / arithmeticFactor
 ]
 
 { #category : #'non-terminals' }
@@ -78,7 +95,7 @@ JbArithmeticExpressionParser >> identifierExpression [
 { #category : #'non-terminals' }
 JbArithmeticExpressionParser >> numberExpression [
 
-	^ (self dependencyAt: JbNumberParser) integer ==> [ :n | 
+	^ (self dependencyAt: JbNumberParser) number ==> [ :n | 
 	  JbConstantExpressionNode new
 		  value: n;
 		  yourself ]

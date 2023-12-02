@@ -1,3 +1,18 @@
+"
+Abstract Syntax Tree for Variable Declaration Statements
+
+Internal Representation and Key Implementation Points.
+
+	 Overrides:
+	executeIn:
+ 
+    Instance Variables
+	expression:		<Object>
+	identifier:		<Object>
+
+
+    Implementation Points
+"
 Class {
 	#name : #JbVariableDeclarationStatementNode,
 	#superclass : #JbAbstractSyntaxTreeNode,

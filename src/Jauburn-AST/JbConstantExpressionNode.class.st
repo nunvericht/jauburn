@@ -1,3 +1,18 @@
+"
+Abstract Syntax Tree class for Constant Expression Nodes
+Subclass of JbAbstractSyntaxTreeNode 
+ 
+Internal Representation and Key Implementation Points.
+
+	 Overrides:
+	evaluateIn:
+	value
+
+    Instance Variables
+	value:		<Object>
+
+    Implementation Points
+"
 Class {
 	#name : #JbConstantExpressionNode,
 	#superclass : #JbAbstractSyntaxTreeNode,

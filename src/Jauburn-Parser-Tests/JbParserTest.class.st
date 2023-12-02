@@ -182,6 +182,88 @@ JbParserTest >> testIdentifierExpressionList [
 	self assert: (self parse: '' rule: #identifierExpressionList) size equals: 0
 ]
 
+{ #category : #'tests-statements' }
+JbParserTest >> testIfElseStatement [
+
+	| input |
+	input := self parse: 'if (x==1) {} else {}' rule: #ifElseStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assert: input thenStatements size equals: 0.
+	self assert: input elseStatements size equals: 0.
+	self assert: input thenStatements equals: #(  ). "empty array"
+
+	input := self
+		         parse:
+		         'if (x == 1) {x = x + 1;} else {x = x + 2; y = y - 5;}'
+		         rule: #ifElseStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assertNode: input condition rhs isConstant: 1.
+	self assert: input thenStatements size equals: 1.
+	self assert: input elseStatements size equals: 2.
+
+	input := self
+		         parse: 'if (x == 1) {x = x + 1; y = 0;} else {x = x + 2;}'
+		         rule: #ifElseStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assertNode: input condition rhs isConstant: 1.
+	self assert: input thenStatements size equals: 2.
+	self assert: input elseStatements size equals: 1.
+
+	"Fail to parse tests"
+	self fail: 'if x == 1 { } else {}' rule: #ifElseStatement
+]
+
+{ #category : #'tests-statements' }
+JbParserTest >> testIfStatement [
+
+	| input |
+	input := self parse: 'if (x == 1) {}' rule: #ifStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assert: input thenStatements size equals: 0.
+	self assert: input thenStatements equals: #(  ). "empty array"
+
+	input := self
+		         parse: 'if (x == 1) {x = x + 1; y = y - 5;}'
+		         rule: #ifStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assertNode: input condition rhs isConstant: 1.
+	self assert: input thenStatements size equals: 2.
+
+	input := self parse: 'if(x==1){x=x+1;}' rule: #ifStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assert: input thenStatements size equals: 1.
+
+	"Fail to parse tests"
+	self fail: 'if x == 1 { }' rule: #ifStatement.
+	self fail: 'if (x == 1) x = x + 1;' rule: #ifStatement.
+	self fail: 'print if (x == 1) "hello";' rule: #ifStatement
+]
+
+{ #category : #'tests-statements' }
+JbParserTest >> testInputStatement [
+
+	| input |
+	input := self parse: 'inputnum a;' rule: #inputStatement.
+	self assert: input identifier equals: #a.
+
+	"Fail to parse tests"
+	self fail: 'inputnum 45;' rule: #inputStatement.
+	self fail: 'inputnum "hello";' rule: #inputStatement
+]
+
+{ #category : #'tests-statements' }
+JbParserTest >> testPrintStatement [
+
+	| input |
+	input := self parse: 'print 5*monkey;' rule: #printStatement.
+	"expression produces JbMultiplcationNode"
+	self assert: input expression lhs value equals: 5.
+	self assert: input expression rhs identifier equals: 'monkey'.
+
+	"Fail to parse tests"
+	self fail: 'print if (x == 1) "hello";' rule: #printStatement
+]
+
 { #category : #'tests-program' }
 JbParserTest >> testProgram [ 
 
@@ -257,4 +339,26 @@ JbParserTest >> testVariableDeclarationStatement [
 	self assert: stmt identifier equals: 'x'.
 	stmt := self parse: 'var monkey = 37*x;' rule: #variableDeclarationStatement.
 	self assert: stmt identifier equals: 'monkey'
+]
+
+{ #category : #'tests-statements' }
+JbParserTest >> testWhileStatement [
+
+	| input |
+	input := self parse: 'while (x < 5) {}' rule: #whileStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assert: input doStatements size equals: 0.
+	self assert: input doStatements equals: #(  ). "empty array"
+
+	input := self
+		         parse: 'while (x < 5) {x = x + 1;}'
+		         rule: #whileStatement.
+	self assert: input condition lhs identifier equals: #x.
+	self assertNode: input condition rhs isConstant: 5.
+	self assert: input doStatements size equals: 1.
+
+	"Fail to parse tests"
+	self fail: 'while x == 1 { }' rule: #whileStatement.
+	self fail: 'while (x == 1) x = x + 1;' rule: #whileStatement.
+	self fail: 'print while (x == 1) "hello";' rule: #whileStatement
 ]

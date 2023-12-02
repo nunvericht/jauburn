@@ -136,7 +136,11 @@ Class {
 		'stringComparisonExpression',
 		'booleanExpression',
 		'functionCallStatement',
-		'printStatement'
+		'printStatement',
+		'ifStatement',
+		'ifElseStatement',
+		'whileStatement',
+		'inputStatement'
 	],
 	#category : #'Jauburn-Parser-Core'
 }
@@ -285,6 +289,38 @@ JbParser >> identifierExpressionList [
 					result ] ]
 ]
 
+{ #category : #statements }
+JbParser >> ifElseStatement [
+
+	^ self keyword trim , '(' asParser trim , self expression
+	  , ')' asParser trim , self statementBlock , self keyword trim
+	  , self statementBlock ==> [ :arr | 
+	  JbIfElseStatementNode new
+		  condition: arr third;
+		  thenStatements: arr fifth;
+		  elseStatements: arr seventh yourself ]
+]
+
+{ #category : #statements }
+JbParser >> ifStatement [
+
+	^ self keyword trim , '(' asParser trim , self expression
+	  , ')' asParser trim , self statementBlock ==> [ :arr | 
+	  JbIfStatementNode new
+		  condition: arr third;
+		  thenStatements: arr fifth yourself ]
+]
+
+{ #category : #statements }
+JbParser >> inputStatement [
+
+	^ ('inputnum' asParser , #space asParser) trim , identifier
+  	, ';' asParser trim
+	==> [ :arr | JbInputStatementNode new 
+		identifier: arr second ]
+
+]
+
 { #category : #'low-level' }
 JbParser >> keyword [ 
 
@@ -331,6 +367,7 @@ JbParser >> statement [
 
 	^ variableDeclarationStatement / assignmentStatement
 	  / returnStatement / functionCallStatement / printStatement
+	  / ifElseStatement / ifStatement / whileStatement / inputStatement
 ]
 
 { #category : #statements }
@@ -374,4 +411,14 @@ JbParser >> variableDeclarationStatement [
 		  identifier: arr second;
 		  expression: arr fourth;
 		  yourself ]
+]
+
+{ #category : #statements }
+JbParser >> whileStatement [
+
+	^ 'while' asParser trim , '(' asParser trim , self expression
+	  , ')' asParser trim , self statementBlock ==> [ :arr | 
+	  JbWhileStatementNode new
+		  condition: arr third;
+		  doStatements: arr fifth yourself ]
 ]

@@ -31,6 +31,14 @@ JbNumberParserTest >> testCanParseDigitNotZero [
 ]
 
 { #category : #tests }
+JbNumberParserTest >> testCanParseNegativeFloats [
+
+	self assert: '-0.1298371' is: -0.1298371.
+	self assert: '-1.01298371' is: -1.01298371.
+	self assert: '-1283712.999198231' is: -1283712.999198231
+]
+
+{ #category : #tests }
 JbNumberParserTest >> testCanParseNegativeMultidigitInteger [
 
 	self assert: '-3847' is: -3847.
@@ -46,11 +54,20 @@ JbNumberParserTest >> testCanParseNegativeSingleDigitInteger [
 ]
 
 { #category : #tests }
+JbNumberParserTest >> testCanParsePositiveFloats [
+
+	self assert: '0.1231' is: 0.1231.
+	self assert: '0.0' is: 0.0.
+	self assert: '0.01231' is: 0.01231.
+	self assert: '12.0' is: 12.0.
+	self assert: '120931.165235112312414' is: 120931.165235112312414
+]
+
+{ #category : #tests }
 JbNumberParserTest >> testCanParsePositiveMultidigitInteger [
 
 	self assert: '1233' is: 1233.
 	self assert: '8347563' is: 8347563.
-
 ]
 
 { #category : #tests }
@@ -62,9 +79,19 @@ JbNumberParserTest >> testCanParsePositiveSingleDigitInteger [
 ]
 
 { #category : #tests }
+JbNumberParserTest >> testNotFloats [
+
+	self fail: 'monkey.123' rule: #start.
+	self fail: '123.whatever' rule: #start.
+	self fail: '-191whatnot.456' rule: #start.
+	self fail: '-.1231' rule: #start
+]
+
+{ #category : #tests }
 JbNumberParserTest >> testNotIntegers [
 
 	self fail: '-' rule: #start.
 	self fail: '0876' rule: #start.
-	self fail: 'xqwdqw' rule: #start
+	self fail: 'xqwdqw' rule: #start.
+	self fail: '-0' rule: #start
 ]

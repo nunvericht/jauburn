@@ -1,3 +1,18 @@
+"
+Abstract Syntax Tree class for Identifier Expression Nodes
+Subclass of JbAbstractSyntaxTreeNode 
+ 
+Internal Representation and Key Implementation Points.
+
+	 Overrides:
+	evaluateIn:
+
+    Instance Variables
+	identifier:		<Object>
+
+
+ Implementation Points
+"
 Class {
 	#name : #JbIdentifierExpressionNode,
 	#superclass : #JbAbstractSyntaxTreeNode,

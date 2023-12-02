@@ -6,7 +6,9 @@ Class {
 	#superclass : #Object,
 	#instVars : [
 		'bindings',
-		'outerEnvironment'
+		'outerEnvironment',
+		'jbUIManager',
+		'jbTranscript'
 	],
 	#category : #'Jauburn-Interpreter-Core'
 }
@@ -41,6 +43,30 @@ JbEnvironment >> initialize [
 
 	super initialize .
 	bindings := Dictionary new.
+]
+
+{ #category : #accessing }
+JbEnvironment >> jbTranscript [
+
+	^ jbTranscript ifNil: [ Transcript ]
+]
+
+{ #category : #accessing }
+JbEnvironment >> jbTranscript: aTranscript [
+
+	jbTranscript := aTranscript
+]
+
+{ #category : #accessing }
+JbEnvironment >> jbUIManager [
+
+	^ jbUIManager ifNil: [ UIManager default ]
+]
+
+{ #category : #accessing }
+JbEnvironment >> jbUIManager: aUIManager [
+
+	jbUIManager := aUIManager
 ]
 
 { #category : #accessing }

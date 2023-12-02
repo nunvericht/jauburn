@@ -8,10 +8,54 @@ Class {
 	#name : #JbInterpreter,
 	#superclass : #Object,
 	#instVars : [
-		'environment'
+		'environment',
+		'jbUIManager'
 	],
 	#category : #'Jauburn-Interpreter-Core'
 }
+
+{ #category : #functions }
+JbInterpreter class >> newWithStandardLibrary [
+
+	^ self new interpret: self standardLibrary
+]
+
+{ #category : #functions }
+JbInterpreter class >> standardLibrary [
+
+	"Defines function utilized in newWithStandardLibrary:
+	not(b), and(a,b), or(a,b), abs(f), sqrt(x), gcd(a,b) 
+	
+	Newtons sqrt: 0.5 * (y + x/y) with y being a guess.
+	
+	Euclid's gcd: If a = 0, then gcd a,b) = b 
+		If b= 0; then gcd(a,b) = a;  Else write a in quotient remainder form (a = b * q + r)
+		Find gcd(b,r) since gcd(a,b) = gcd(b,r)."
+
+	^ 'var not = function (b) { if (b) { return false; } 
+			else { return true; } };
+	
+		var and = function (a,b) {if (a) 
+						{ if (b) { return true; }
+							 else { return false; } }
+								else { return false; } };
+								
+		var or = function (a,b) { if (a) { return true; } 
+					else { if (b) { return true; } 
+						else { return false; } } };
+					
+		var abs = function (x) { if (x >= 0) { return x;} 
+					else {return x * -1;} };
+	
+		var sqrt = function (x) { if (x == 0) { return 0; } 
+							else { var y = 1; var z = 100;
+        						while (z > 1) {
+            						y = 0.5 * (y + x / y); z = z - 1; }
+        								return y; } };
+								
+		var gcd = function (a, b) {if (b == 0) { return a; } 
+			else { return gcd(abs(b), abs(a % b)) ; } };'
+]
 
 { #category : #accessing }
 JbInterpreter >> environment [ 
@@ -20,7 +64,7 @@ JbInterpreter >> environment [
 ]
 
 { #category : #initialization }
-JbInterpreter >> initialize [ 
+JbInterpreter >> initialize [
 
 	super initialize.
 	environment := JbEnvironment new
@@ -38,6 +82,18 @@ JbInterpreter >> interpret: programString [
 JbInterpreter >> interpretAst: ast [
 
 	^ ast executeIn: environment
+]
+
+{ #category : #api }
+JbInterpreter >> jbUIManager [
+
+	^ jbUIManager ifNil: [ UIManager default ]
+]
+
+{ #category : #api }
+JbInterpreter >> jbUIManager: aUIManager [
+
+	jbUIManager := aUIManager
 ]
 
 { #category : #api }

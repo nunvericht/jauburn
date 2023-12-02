@@ -10,13 +10,13 @@ Inherits
 Operator Method returns subclass operator
 "
 Class {
-	#name : #JbMultiplicationNode,
+	#name : #JbDivisionNode,
 	#superclass : #JbArity2OperatorNode,
 	#category : #'Jauburn-AST-Core'
 }
 
 { #category : #accessing }
-JbMultiplicationNode >> operator [
+JbDivisionNode >> operator [
 
-	^ $*
+	^ $/
 ]

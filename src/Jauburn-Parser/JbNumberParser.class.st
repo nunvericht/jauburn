@@ -1,5 +1,12 @@
 "
 I handle the parsing of numbers is Jauburn.  I'm basically the CPIntegerParser introduced in the class videos.
+Updated to support integers and floats. Integer method was changed to Number method.
+
+instance variables:
+
+	digit
+	digitNotZero
+	number
 "
 Class {
 	#name : #JbNumberParser,
@@ -7,7 +14,7 @@ Class {
 	#instVars : [
 		'digitNotZero',
 		'digit',
-		'integer'
+		'number'
 	],
 	#category : #'Jauburn-Parser-Core'
 }
@@ -33,9 +40,22 @@ JbNumberParser >> integer [
 			==> [ :str | str asNumber ]
 ]
 
+{ #category : #'non-terminals' }
+JbNumberParser >> number [
+
+	"Parses a float or an integer"
+	
+^ ($- asParser optional , digitNotZero , digit star / $0 asParser
+	   , ($. asParser , digit star) optional
+	   / ($- asParser , $0 asParser , $. asParser , digit star)
+	   / ($0 asParser , $. asParser , digit star)) flatten
+	  ==> [ :str | str asNumber ]
+]
+
 { #category : #accessing }
 JbNumberParser >> start [
+
 	"Answer the production to start this parser with."
 
-	^integer
+	^ number
 ]

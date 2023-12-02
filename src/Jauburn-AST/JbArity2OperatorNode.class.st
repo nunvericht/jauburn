@@ -1,3 +1,21 @@
+"
+Abstract Syntax Tree Parent Class for Operator Nodes.
+Subclass of JbAbstractSyntaxTreeNode 
+ 
+Internal Representation and Key Implementation Points.
+
+	 Overrides:
+	evaluateIn:
+	
+	 Overridden:
+	operator
+	
+	 Instance Variables
+	lhs:		<Object>
+	rhs:		<Object>
+
+    Implementation Points
+"
 Class {
 	#name : #JbArity2OperatorNode,
 	#superclass : #JbAbstractSyntaxTreeNode,

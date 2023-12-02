@@ -1,3 +1,18 @@
+"
+Abstract Syntax Tree Node class for Program Node
+ 
+Internal Representation and Key Implementation Points.
+
+	 Overrides:
+	executeIn:
+
+
+    Instance Variables
+	statements:		<Object>
+
+
+    Implementation Points
+"
 Class {
 	#name : #JbProgramNode,
 	#superclass : #JbAbstractSyntaxTreeNode,
